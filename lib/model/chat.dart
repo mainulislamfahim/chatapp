@@ -1,3 +1,44 @@
+class MessageModel {
+  final String id;
+  final String senderId;
+  final String text;
+  final DateTime timestamp;
+  bool isSeen;
+
+  MessageModel({
+    required this.id,
+    required this.senderId,
+    required this.text,
+    required this.timestamp,
+    this.isSeen = false,
+  });
+
+  // Convert a JSON map to a MessageModel instance
+  factory MessageModel.fromJson(Map<String, dynamic> json) {
+    return MessageModel(
+      id: json['id'] as String,
+      senderId: json['senderId'] as String,
+      text: json['text'] as String,
+      timestamp: DateTime.parse(json['timestamp'] as String),
+      isSeen: json['isSeen'] as bool? ?? false,
+    );
+  }
+
+  // Convert a MessageModel instance to a JSON map
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'senderId': senderId,
+      'text': text,
+      'timestamp': timestamp.toIso8601String(),
+      'isSeen': isSeen,
+    };
+  }
+}
+
+
+
+
 class Chat {
   final String name, lastMessage, image, time;
   final bool isActive;

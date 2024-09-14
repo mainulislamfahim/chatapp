@@ -27,6 +27,7 @@ class LoginController extends GetxController {
       isLoading.value = false;
       if(response.status!){
         Get.snackbar('Sign In', response.message!);
+        await HiveService.deleteUserID();
         await HiveService.setUserID(response.data!.id!);
         Get.offAllNamed(Routes.HOME);
       }else{

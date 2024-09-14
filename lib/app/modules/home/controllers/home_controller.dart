@@ -3,10 +3,12 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../services/local_store_config.dart';
+
 class HomeController extends GetxController with GetSingleTickerProviderStateMixin {
+
   final selectedBottomIndex = 0.obs;
   RxInt selectedTabIndex = 0.obs;
-
   // TabController for managing tabs
   late TabController tabController;
 
@@ -25,7 +27,7 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
     if (socket.connected) {
       socket.emit('message', {'message': message});
     } else {
-      print('Socket is not connected. Connection status: ${socket.connected}');
+      debugPrint('Socket is not connected. Connection status: ${socket.connected}');
     }
   }
 
@@ -57,33 +59,44 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
     );
 
     // Listen for connection
-    socket.onConnect((_) {
-      print('Connected to the server');
+    socket.onConnect((_) async {
+      debugPrint('Connected to the server');
+      final userId = await HiveService.getUserID(); // Fetch user ID from Hive
+      socket.emit('registerUser', userId);
     });
 
     // Listen for incoming messages
+    socket.on('receiveMessage', (data) {
+      debugPrint('Message from ${data['senderId']}: ${data['message']}');
+      // Handle the received message in your UI
+    });
+    // Emit when a message is seen
+    void markMessageAsSeen(String messageId) {
+      socket.emit('messageSeen', messageId);
+    }
+    // Listen for incoming messages
     socket.on('message', (data) {
-      print('New message: $data');
+      debugPrint('New message: $data');
     });
 
     // Listen for disconnection
     socket.onDisconnect((_) {
-      print('Disconnected from server');
+      debugPrint('Disconnected from server');
     });
 
     // Optionally listen for connection errors
     // socket.onConnectError((err) {
-    //   print('Connect error: $err');
+    //   debugPrint('Connect error: $err');
     // });
     // socket.onError((err) {
-    //   print('Error: $err');
+    //   debugPrint('Error: $err');
     // });
   }
 
   @override
   void onClose() {
     // Unsubscribe and disconnect socket before closing
-    disconnectSocket();
+    // disconnectSocket();
     tabController.dispose();
     super.onClose();
   }

@@ -28,11 +28,4 @@ class HelperUtils {
     }
   }
 
-  static Locale locateLanguage() {
-    return Locale(language(), language().toUpperCase());
-  }
-
-  static String language() {
-    return HiveService.getLanguage().split('_')[0] ?? 'en';
-  }
 }

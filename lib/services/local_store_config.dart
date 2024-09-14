@@ -11,20 +11,18 @@ class HiveService {
     box = await Hive.openBox('appData');
   }
 
-  static setToken(String token){
-    box.put('token', token);
-  }
-  static Future<String?> getToken() async{
-   return await box.get('token');
+  /// User ID
+  static setUserID(String id) {
+    box.put('id', id);
   }
 
-
-  static setLanguage(String language) {
-    box.put('language', language);
+  static deleteUserID() {
+    box.delete('id');
   }
 
-  static getLanguage() {
-    return box.get('language', defaultValue: 'en_en');
+  static  getUserID() async {
+    return await box.get('id');
   }
+
 
 }

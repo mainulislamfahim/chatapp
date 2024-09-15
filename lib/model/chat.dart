@@ -1,42 +1,38 @@
 class MessageModel {
-  final String id;
-  final String senderId;
-  final String text;
-  final DateTime timestamp;
-  bool isSeen;
+  String id;
+  String senderId;
+  String receiverId;
+  String text;
+  DateTime timestamp;
 
   MessageModel({
     required this.id,
     required this.senderId,
+    required this.receiverId,
     required this.text,
     required this.timestamp,
-    this.isSeen = false,
   });
 
-  // Convert a JSON map to a MessageModel instance
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     return MessageModel(
-      id: json['id'] as String,
-      senderId: json['senderId'] as String,
-      text: json['text'] as String,
-      timestamp: DateTime.parse(json['timestamp'] as String),
-      isSeen: json['isSeen'] as bool? ?? false,
+      id: json['id'] ?? '', // Add default values to avoid null errors
+      senderId: json['senderId'] ?? '',
+      receiverId: json['receiverId'] ?? '',
+      text: json['message'] ?? '',
+      timestamp: json['timestamp'] != null ? DateTime.parse(json['timestamp']) : DateTime.now(),
     );
   }
 
-  // Convert a MessageModel instance to a JSON map
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'senderId': senderId,
-      'text': text,
+      'receiverId': receiverId,
+      'message': text,
       'timestamp': timestamp.toIso8601String(),
-      'isSeen': isSeen,
     };
   }
 }
-
-
 
 
 class Chat {

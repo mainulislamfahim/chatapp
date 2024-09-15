@@ -1,5 +1,6 @@
 import 'package:chatapp/model/signInModel.dart';
 import 'package:chatapp/model/signUpModel.dart';
+import 'package:chatapp/model/user.dart';
 import 'package:chatapp/repository/api_endpoint.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +10,7 @@ import '../helper/log_printer.dart';
 abstract class IApiService {
   Future<SignInModel> signIn(String email, String password);
   Future<SignUpModel> signUp(String username, String email, String password);
+  Future<AllUsers> getUsers();
 }
 
 class ApiServices implements IApiService {
@@ -38,8 +40,16 @@ class ApiServices implements IApiService {
       'email': email,
       'password': password,
     };
-    return _handleRequest(() => _dio.post(ApiEndpoint.register, data: data),
-        (dynamic data) => SignUpModel.fromJson(data), 'Register');
+    return _handleRequest<SignUpModel>(
+        () => _dio.post(ApiEndpoint.register, data: data),
+        (dynamic data) => SignUpModel.fromJson(data),
+        'Register');
+  }
+
+  @override
+  Future<AllUsers> getUsers() async {
+    return _handleRequest<AllUsers>(() => _dio.get(ApiEndpoint.allUser),
+        (dynamic data) => AllUsers.fromJson(data), 'Users');
   }
 }
 

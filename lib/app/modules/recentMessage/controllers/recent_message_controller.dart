@@ -1,23 +1,27 @@
+import 'package:chatapp/helper/handleException.dart';
+import 'package:chatapp/model/user.dart';
+import 'package:chatapp/repository/api_services.dart';
+import 'package:chatapp/services/local_store_config.dart';
 import 'package:get/get.dart';
 
 class RecentMessageController extends GetxController {
-  //TODO: Implement RecentMessageController
+  ApiServices apiServices = ApiServices();
+  final allUsers = <Users>[].obs; // Initialize with null, making AllUsers nullable // Initialize with an empty list
 
-  final count = 0.obs;
+  Future<void> getAllUsers() async {
+    try {
+      final currentID = await HiveService.getUserID();
+      final response = await apiServices.getUsers();
+      allUsers.value = response.data!.where((user) => user.id != currentID).toList();
+    } catch (e) {
+      handleException(e);
+    }
+  }
+
   @override
   void onInit() {
+    getAllUsers();
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
 }

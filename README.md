@@ -1,5 +1,9 @@
 # chatapp
 
+##LOGIN
+Email : fahim@gmail.com
+password: 123
+
 A new Flutter project.
 
 ## Getting Started
